@@ -5,6 +5,8 @@ from app.database.database_connector import DatabaseConnector
 from app.database.impl.database_connector_impl import DatabaseConnectorImpl
 from app.repositories.user.impl.user_repository_impl import UserRepositoryImpl
 from app.repositories.user.user_repository import UserRepository
+from app.services.auth.auth_service import AuthService
+from app.services.auth.impl.auth_service_impl import AuthServiceImpl
 from app.services.user.impl.user_service_impl import UserServiceImpl
 from app.services.user.user_service import UserService
 
@@ -13,15 +15,18 @@ bindings = { }
 # Create instances only one time
 database_connector = DatabaseConnectorImpl()
 
-
 user_repository = UserRepositoryImpl(database_connector=database_connector)
+
 user_service = UserServiceImpl(user_repository=user_repository)
+auth_service = AuthServiceImpl(user_repository=user_repository)
 
 # Put them in an interface -> instance dict so they will be used everytime a dependency is required
 bindings[DatabaseConnector] = database_connector
 
 bindings[UserRepository] = user_repository
+
 bindings[UserService] = user_service
+bindings[AuthService] = auth_service
 
 
 def resolve(interface):

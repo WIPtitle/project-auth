@@ -25,9 +25,9 @@ class UserServiceImpl(UserService):
 
 
     def update(self, user_id: int, user: User) -> User:
-        if user.id != id:
-            raise UnupdateableDataException("Can't update id")
-
+        # User has id null since it comes from dto without id. Even if service gets used elsewhere,
+        # user.id should always match user_id.
+        user.id = user_id
         user = self.user_repository.update(user)
         return user
 
@@ -39,3 +39,4 @@ class UserServiceImpl(UserService):
 
     def get_all(self) -> Sequence[User]:
         return self.user_repository.find_all()
+
