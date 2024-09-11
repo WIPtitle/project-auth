@@ -13,27 +13,26 @@ from app.routers.router_wrapper import RouterWrapper
 from app.services.user.user_service import UserService
 from app.utils.read_credentials import read_credentials
 
+
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
-class UserRouter(RouterWrapper):
+class AuthRouter(RouterWrapper):
     @inject
     def __init__(self, user_service: UserService):
-        super().__init__(prefix="/user")
+        super().__init__(prefix="/auth")
         self.user_service = user_service
 
         secret_key_file = os.getenv('AUTH_SECRET_KEY_FILE')
         credentials = read_credentials(secret_key_file)
         self.secret_key = credentials['SECRET_KEY']
 
-        self._define_routes()
-
 
     def _define_routes(self):
-        @self.router.post("/create")
+        @self.router.post("/user")
         def create_user(user: UserInputDto):
             user.password = pwd_context.hash(user.password)
             return User.to_response(self.user_service.create(User.from_dto(user)))
