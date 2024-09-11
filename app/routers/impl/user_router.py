@@ -8,7 +8,7 @@ from passlib.context import CryptContext
 
 from app.config.bindings import inject
 from app.exceptions.authentication_exception import AuthenticationException
-from app.models.user import User
+from app.models.user import User, UserInputDto
 from app.routers.router_wrapper import RouterWrapper
 from app.services.user.user_service import UserService
 from app.utils.read_credentials import read_credentials
@@ -17,7 +17,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/token")
 
 class UserRouter(RouterWrapper):
     @inject
@@ -33,13 +33,13 @@ class UserRouter(RouterWrapper):
 
 
     def _define_routes(self):
-        @self.router.post("/create", response_model=User)
-        def create_user(user: User):
+        @self.router.post("/create")
+        def create_user(user: UserInputDto):
             user.password = pwd_context.hash(user.password)
-            return self.user_service.create(user)
+            return User.to_response(self.user_service.create(User.from_dto(user)))
 
 
-        @self.router.post("/token", response_model=dict)
+        @self.router.post("/token")
         def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
             user = authenticate_user(self.user_service, form_data.username, form_data.password)
 
@@ -50,15 +50,15 @@ class UserRouter(RouterWrapper):
             return {"access_token": access_token, "token_type": "bearer"}
 
 
-        @self.router.get("/me", response_model=User)
+        @self.router.get("/me")
         def read_users_me(token: str = Depends(oauth2_scheme)):
-            return get_current_user(self.secret_key, self.user_service, token)
+            return User.to_response(get_current_user(self.secret_key, self.user_service, token))
 
 
 def authenticate_user(user_service: UserService, email: str, password: str):
     user = user_service.get_by_email(email)
     if not user or not pwd_context.verify(password, user.password):
-        raise AuthenticationException("Token not valid")
+        raise AuthenticationException("Wrong password")
     return user
 
 

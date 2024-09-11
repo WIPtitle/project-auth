@@ -41,7 +41,7 @@ async def validation_exception_handler(request: Request, exc: ValidationExceptio
 
 async def authentication_exception_handler(request: Request, exc: AuthenticationException):
     return JSONResponse(
-        status_code=403,
+        status_code=401,
         content={"message": exc.message},
     )
 

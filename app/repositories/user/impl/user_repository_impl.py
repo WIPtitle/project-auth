@@ -34,7 +34,7 @@ class UserRepositoryImpl(UserRepository):
 
     def create(self, user: User) -> User:
         try:
-            self.find_by_id(user.user_id)
+            self.find_by_email(user.email)
         except NotFoundException:
             self.database_connector.get_session().add(user)
             self.database_connector.get_session().commit()
