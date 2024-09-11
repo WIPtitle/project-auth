@@ -1,6 +1,5 @@
 from typing import Sequence
 
-from app.exceptions.unupdateable_data_exception import UnupdateableDataException
 from app.models.user import User
 from app.repositories.user.user_repository import UserRepository
 from app.services.user.user_service import UserService

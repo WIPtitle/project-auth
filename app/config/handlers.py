@@ -5,6 +5,7 @@ from app.exceptions.authentication_exception import AuthenticationException
 from app.exceptions.bad_request_exception import BadRequestException
 from app.exceptions.internal_error_exception import InternalErrorException
 from app.exceptions.not_found_exception import NotFoundException
+from app.exceptions.permission_exception import PermissionException
 from app.exceptions.unupdateable_data_exception import UnupdateableDataException
 from app.exceptions.validation_exception import ValidationException
 
@@ -40,6 +41,12 @@ async def validation_exception_handler(request: Request, exc: ValidationExceptio
     )
 
 async def authentication_exception_handler(request: Request, exc: AuthenticationException):
+    return JSONResponse(
+        status_code=401,
+        content={"message": exc.message},
+    )
+
+async def permission_exception_handler(request: Request, exc: PermissionException):
     return JSONResponse(
         status_code=401,
         content={"message": exc.message},
