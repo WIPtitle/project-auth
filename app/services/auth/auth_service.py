@@ -19,3 +19,7 @@ class AuthService(ABC):
     @abstractmethod
     def get_pwd_context(self):
         pass
+
+    @abstractmethod
+    def get_permissions(self):
+        pass

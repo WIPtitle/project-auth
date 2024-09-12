@@ -5,6 +5,7 @@ import jwt
 from passlib.context import CryptContext
 
 from app.exceptions.authentication_exception import AuthenticationException
+from app.models.enum.permission import Permission
 from app.models.user import User
 from app.repositories.user.user_repository import UserRepository
 from app.services.auth.auth_service import AuthService
@@ -66,3 +67,7 @@ class AuthServiceImpl(AuthService):
 
     def get_pwd_context(self):
         return self.pwd_context
+
+
+    def get_permissions(self):
+        return [permission for permission in Permission]
