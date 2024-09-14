@@ -15,7 +15,7 @@ from app.services.user.user_service import UserService
 class UserRouter(RouterWrapper):
     @inject
     def __init__(self, user_service: UserService, auth_service: AuthService):
-        super().__init__(prefix="/user")
+        super().__init__(prefix="/users")
         self.user_service = user_service
         self.auth_service = auth_service
 
@@ -70,3 +70,9 @@ class UserRouter(RouterWrapper):
                     raise AuthenticationException("Can't delete a user that is not yourself")
 
             return User.to_response(self.user_service.delete_by_id(user_id))
+
+
+        @self.router.get("/")
+        def get_all_users():
+            all_users = self.user_service.get_all()
+            return [User.to_response(user) for user in all_users]
