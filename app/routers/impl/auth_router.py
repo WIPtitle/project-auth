@@ -20,7 +20,7 @@ class AuthRouter(RouterWrapper):
             return self.auth_service.login(form_data.username, form_data.password)
 
 
-        @self.router.get("/me")
+        @self.router.get("/user")
         def read_users_me(token: str = Depends(oauth2_scheme)):
             return User.to_response(self.auth_service.get_validated_user_from_token(token))
 
