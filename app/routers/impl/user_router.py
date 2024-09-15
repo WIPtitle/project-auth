@@ -1,8 +1,8 @@
-from app.exceptions.permission_exception import PermissionException
 from fastapi import Depends
 
 from app.config.bindings import inject
 from app.exceptions.authentication_exception import AuthenticationException
+from app.exceptions.authorization_exception import AuthorizationException
 from app.exceptions.bad_request_exception import BadRequestException
 from app.models.enum.permission import Permission
 from app.models.user import User, UserInputDto
@@ -39,7 +39,7 @@ class UserRouter(RouterWrapper):
                 user.password = self.auth_service.get_pwd_context().hash(user.password)
                 return User.to_response(self.user_service.create(User.from_dto(user)))
             else:
-                raise PermissionException("You don't have permission to create a new account")
+                raise AuthorizationException("You don't have permission to create a new account")
 
 
         @self.router.get("/{user_id}")
@@ -56,7 +56,7 @@ class UserRouter(RouterWrapper):
                     raise AuthenticationException("Can't update a user that is not yourself")
 
                 if set(token_user.permissions) != set(user.permissions):
-                    raise PermissionException("Can't update your permissions unless user manager")
+                    raise AuthorizationException("Can't update your permissions unless user manager")
 
             user.password = self.auth_service.get_pwd_context().hash(user.password)
             return User.to_response(self.user_service.update(user_id, User.from_dto(user)))

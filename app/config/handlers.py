@@ -2,6 +2,7 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 
 from app.exceptions.authentication_exception import AuthenticationException
+from app.exceptions.authorization_exception import AuthorizationException
 from app.exceptions.bad_request_exception import BadRequestException
 from app.exceptions.internal_error_exception import InternalErrorException
 from app.exceptions.not_found_exception import NotFoundException
@@ -45,7 +46,7 @@ async def authentication_exception_handler(request: Request, exc: Authentication
         content={"message": exc.message},
     )
 
-async def authorization_exception_handler(request: Request, exc: AuthenticationException):
+async def authorization_exception_handler(request: Request, exc: AuthorizationException):
     return JSONResponse(
         status_code=403,
         content={"message": exc.message},
