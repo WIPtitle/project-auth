@@ -1,9 +1,9 @@
+from app.exceptions.permission_exception import PermissionException
 from fastapi import Depends
 
 from app.config.bindings import inject
 from app.exceptions.authentication_exception import AuthenticationException
 from app.exceptions.bad_request_exception import BadRequestException
-from app.exceptions.permission_exception import PermissionException
 from app.models.enum.permission import Permission
 from app.models.user import User, UserInputDto
 from app.routers.impl.auth_router import oauth2_scheme

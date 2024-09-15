@@ -2,6 +2,7 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from app.config.bindings import inject
+from app.models.user import User
 from app.routers.router_wrapper import RouterWrapper
 from app.services.auth.auth_service import AuthService
 
