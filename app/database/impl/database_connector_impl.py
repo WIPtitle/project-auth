@@ -17,7 +17,10 @@ class DatabaseConnectorImpl(DatabaseConnector):
             f"postgresql://{credentials['POSTGRES_USER']}:{credentials['POSTGRES_PASSWORD']}@{database_hostname}:5432/{credentials['POSTGRES_DB']}",
             echo=True)
 
-        SQLModel.metadata.create_all(self.engine)
+        try:
+            SQLModel.metadata.create_all(self.engine)
+        except:
+            pass
 
     def get_session(self):
         if self.session is None or not self.session.is_active:
