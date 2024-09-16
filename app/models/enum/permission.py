@@ -23,6 +23,6 @@ class PermissionList(TypeDecorator):
         return ','.join([perm.value for perm in value])
 
     def process_result_value(self, value, dialect):
-        if value is None:
-            return None
+        if value is None or value.strip() == '':
+            return []
         return [Permission(perm) for perm in value.split(',')]
