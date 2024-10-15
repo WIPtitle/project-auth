@@ -1,4 +1,5 @@
 from fastapi import Depends
+from fastapi.responses import JSONResponse
 
 from app.config.bindings import inject
 from app.exceptions.authentication_exception import AuthenticationException
@@ -43,7 +44,8 @@ class UserRouter(RouterWrapper):
 
 
         @self.router.get("/{user_id}")
-        def get_user(user_id: int):
+        def get_user(user_id: int, token: str = Depends(oauth2_scheme)):
+            token_user = self.auth_service.get_validated_user_from_token(token)
             return User.to_response(self.user_service.get_by_id(user_id))
 
 
@@ -73,6 +75,7 @@ class UserRouter(RouterWrapper):
 
 
         @self.router.get("/")
-        def get_all_users():
+        def get_all_users(token: str = Depends(oauth2_scheme)):
+            token_user = self.auth_service.get_validated_user_from_token(token)
             all_users = self.user_service.get_all()
             return [User.to_response(user) for user in all_users]
