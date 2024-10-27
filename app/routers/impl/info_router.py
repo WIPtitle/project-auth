@@ -1,13 +1,6 @@
-from fastapi import Depends
 from fastapi.responses import JSONResponse
 
 from app.config.bindings import inject
-from app.exceptions.authentication_exception import AuthenticationException
-from app.exceptions.authorization_exception import AuthorizationException
-from app.exceptions.bad_request_exception import BadRequestException
-from app.models.enum.permission import Permission
-from app.models.user import User, UserInputDto
-from app.routers.impl.auth_router import oauth2_scheme
 from app.routers.router_wrapper import RouterWrapper
 from app.services.auth.auth_service import AuthService
 from app.services.user.user_service import UserService

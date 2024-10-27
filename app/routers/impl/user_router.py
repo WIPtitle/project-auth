@@ -1,5 +1,4 @@
 from fastapi import Depends
-from fastapi.responses import JSONResponse
 
 from app.config.bindings import inject
 from app.exceptions.authentication_exception import AuthenticationException
