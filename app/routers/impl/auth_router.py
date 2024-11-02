@@ -26,6 +26,11 @@ class AuthRouter(RouterWrapper):
             return User.to_response(self.auth_service.get_validated_user_from_token(token))
 
 
+        @self.router.post("/user")
+        def read_users_me(pin: int, token: str = Depends(oauth2_scheme)):
+            return User.to_response(self.auth_service.get_validated_user_from_token_and_pin(token, pin))
+
+
         @self.router.get("/permissions")
         def get_all_permissions():
             return self.auth_service.get_permissions()

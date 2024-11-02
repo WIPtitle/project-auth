@@ -17,6 +17,10 @@ class AuthService(ABC):
         pass
 
     @abstractmethod
+    def get_validated_user_from_token_and_pin(self, token: str, pin: int) -> User:
+        pass
+
+    @abstractmethod
     def get_pwd_context(self):
         pass
 

@@ -65,6 +65,14 @@ class AuthServiceImpl(AuthService):
         return user
 
 
+    def get_validated_user_from_token_and_pin(self, token: str, pin: int) -> User:
+        user = self.get_validated_user_from_token(token)
+        if user.pin == pin:
+            return user
+        else:
+            raise AuthenticationException("Incorrect PIN")
+
+
     def get_pwd_context(self):
         return self.pwd_context
 

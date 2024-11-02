@@ -10,6 +10,7 @@ from app.models.enum.permission import Permission, PermissionList
 class UserInputDto(SQLModel):
     email: EmailStr
     password: str
+    pin: int
     permissions: List[Permission]
 
 class UserResponse(SQLModel):
@@ -21,6 +22,7 @@ class User(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     email: EmailStr = Field(unique=True)
     password: str
+    pin: int
     permissions: List[Permission] = Field(sa_column=Column(PermissionList))
 
     @classmethod
@@ -29,6 +31,7 @@ class User(SQLModel, table=True):
             id=None,
             email=dto.email,
             password=dto.password,
+            pin=dto.pin,
             permissions=dto.permissions
         )
 
