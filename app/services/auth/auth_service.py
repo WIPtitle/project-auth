@@ -5,7 +5,7 @@ from app.models.user import User
 
 class AuthService(ABC):
     @abstractmethod
-    def login(self, email: str, password: str):
+    def login(self, email: str, password: str, rememberme: bool):
         pass
 
     @abstractmethod

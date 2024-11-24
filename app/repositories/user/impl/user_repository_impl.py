@@ -46,7 +46,8 @@ class UserRepositoryImpl(UserRepository):
     def update(self, user: User) -> User:
         user_db = self.find_by_id(user.id)
         user_db.email = user.email
-        user_db.password = user.password
+        if user.password is not None and user.password != "":
+            user_db.password = user.password
         user_db.permissions = user.permissions
         self.database_connector.get_session().commit()
         self.database_connector.get_session().refresh(user_db)

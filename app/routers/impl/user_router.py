@@ -32,7 +32,7 @@ class UserRouter(RouterWrapper):
                 raise BadRequestException("First user has already been created")
 
 
-        @self.router.post("/")
+        @self.router.post("")
         def create_user_authenticated(user: UserInputDto, token: str = Depends(oauth2_scheme)):
             token_user = self.auth_service.get_validated_user_from_token(token)
             if Permission.USER_MANAGER in token_user.permissions:
@@ -59,7 +59,8 @@ class UserRouter(RouterWrapper):
                 if set(token_user.permissions) != set(user.permissions):
                     raise AuthorizationException("Can't update your permissions unless user manager")
 
-            user.password = self.auth_service.get_pwd_context().hash(user.password)
+            if user.password is not None and user.password != "":
+                user.password = self.auth_service.get_pwd_context().hash(user.password)
             return User.to_response(self.user_service.update(user_id, User.from_dto(user)))
 
 
@@ -73,7 +74,7 @@ class UserRouter(RouterWrapper):
             return User.to_response(self.user_service.delete_by_id(user_id))
 
 
-        @self.router.get("/")
+        @self.router.get("")
         def get_all_users(token: str = Depends(oauth2_scheme)):
             token_user = self.auth_service.get_validated_user_from_token(token)
             all_users = self.user_service.get_all()

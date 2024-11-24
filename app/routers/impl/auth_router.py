@@ -17,8 +17,8 @@ class AuthRouter(RouterWrapper):
 
     def _define_routes(self):
         @self.router.post("/token")
-        def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-            return self.auth_service.login(form_data.username, form_data.password)
+        def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), rememberme: bool = False):
+            return self.auth_service.login(form_data.username, form_data.password, rememberme)
 
 
         @self.router.get("/user")

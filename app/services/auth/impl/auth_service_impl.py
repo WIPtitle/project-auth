@@ -26,21 +26,19 @@ class AuthServiceImpl(AuthService):
         self.pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-    def create_jwt_token(self, secret_key: str, data: dict, algorithm: str):
+    def create_jwt_token(self, secret_key: str, data: dict, algorithm: str, rememberme: bool = False):
         to_encode = data.copy()
-        expires_delta = timedelta(minutes=self.expiration)
-        if expires_delta:
-            expire = datetime.utcnow() + expires_delta
-        else:
-            expire = datetime.utcnow() + expires_delta
-        to_encode.update({"exp": expire})
+        if not rememberme:
+            expires_delta = timedelta(minutes=self.expiration)
+            expire = datetime.now() + expires_delta
+            to_encode.update({"exp": expire})
         encoded_jwt = jwt.encode(to_encode, secret_key, algorithm=algorithm)
         return encoded_jwt
 
 
-    def login(self, email: str, password: str):
+    def login(self, email: str, password: str, rememberme: bool):
         user = self.get_validated_user_from_credentials(email, password)
-        access_token = self.create_jwt_token(secret_key=self.secret_key, data={"sub": user.email}, algorithm=self.algorithm)
+        access_token = self.create_jwt_token(secret_key=self.secret_key, data={"sub": user.email}, algorithm=self.algorithm, rememberme=rememberme)
         return {"access_token": access_token, "token_type": "bearer"}
 
 
