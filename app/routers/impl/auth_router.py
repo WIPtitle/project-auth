@@ -27,7 +27,7 @@ class AuthRouter(RouterWrapper):
 
 
         @self.router.post("/user")
-        def read_users_me(pin: int, token: str = Depends(oauth2_scheme)):
+        def read_users_me(pin: str, token: str = Depends(oauth2_scheme)):
             return User.to_response(self.auth_service.get_validated_user_from_token_and_pin(token, pin))
 
 

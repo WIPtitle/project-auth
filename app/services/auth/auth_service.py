@@ -17,7 +17,7 @@ class AuthService(ABC):
         pass
 
     @abstractmethod
-    def get_validated_user_from_token_and_pin(self, token: str, pin: int) -> User:
+    def get_validated_user_from_token_and_pin(self, token: str, pin: str) -> User:
         pass
 
     @abstractmethod

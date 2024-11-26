@@ -63,7 +63,7 @@ class AuthServiceImpl(AuthService):
         return user
 
 
-    def get_validated_user_from_token_and_pin(self, token: str, pin: int) -> User:
+    def get_validated_user_from_token_and_pin(self, token: str, pin: str) -> User:
         user = self.get_validated_user_from_token(token)
         if user.pin == pin:
             return user
