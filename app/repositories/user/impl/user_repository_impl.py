@@ -48,6 +48,8 @@ class UserRepositoryImpl(UserRepository):
         user_db.email = user.email
         if user.password is not None and user.password != "":
             user_db.password = user.password
+        if user.pin is not None and user.pin != "":
+            user_db.pin = user.pin
         user_db.permissions = user.permissions
         self.database_connector.get_session().commit()
         self.database_connector.get_session().refresh(user_db)
