@@ -28,10 +28,12 @@ class AuthServiceImpl(AuthService):
 
     def create_jwt_token(self, secret_key: str, data: dict, algorithm: str, rememberme: bool = False):
         to_encode = data.copy()
-        if not rememberme:
+        if rememberme:
+            expires_delta = timedelta(days=365)
+        else:
             expires_delta = timedelta(minutes=self.expiration)
-            expire = datetime.now() + expires_delta
-            to_encode.update({"exp": expire})
+        expire = datetime.now() + expires_delta
+        to_encode.update({"exp": expire})
         encoded_jwt = jwt.encode(to_encode, secret_key, algorithm=algorithm)
         return encoded_jwt
 
