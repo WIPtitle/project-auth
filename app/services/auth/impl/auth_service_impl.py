@@ -56,17 +56,23 @@ class AuthServiceImpl(AuthService):
             payload = jwt.decode(token, self.secret_key, algorithms=[self.algorithm])
             user_email: str = payload.get("sub")
             if user_email is None:
+                print("email is none") #Invalid header padding
                 raise AuthenticationException("Malformed token")
-        except Exception:
+        except Exception as e:
+            print(e)
             raise AuthenticationException("JWT error")
         user = self.user_repository.find_by_email(user_email)
         if user is None:
+            print("user is none")
             raise AuthenticationException("User relative to this token doesn't exist")
         return user
 
 
     def get_validated_user_from_token_and_pin(self, token: str, pin: str) -> User:
+        print(token)
         user = self.get_validated_user_from_token(token)
+        print(user.email)
+        print(user.pin)
         if user.pin == pin:
             return user
         else:
