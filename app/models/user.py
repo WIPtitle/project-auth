@@ -12,6 +12,7 @@ class UserInputDto(SQLModel):
     password: str
     pin: str
     permissions: List[Permission]
+    password_check: str | None = None
 
 class UserResponse(SQLModel):
     id: int

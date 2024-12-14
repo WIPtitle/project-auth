@@ -1,6 +1,7 @@
 from functools import wraps
 from typing import Callable, get_type_hints
 
+from app.clients.devices_client import DevicesClient
 from app.database.database_connector import DatabaseConnector
 from app.database.impl.database_connector_impl import DatabaseConnectorImpl
 from app.repositories.user.impl.user_repository_impl import UserRepositoryImpl
@@ -27,6 +28,8 @@ bindings[UserRepository] = user_repository
 
 bindings[UserService] = user_service
 bindings[AuthService] = auth_service
+
+bindings[DevicesClient] = DevicesClient()
 
 
 def resolve(interface):

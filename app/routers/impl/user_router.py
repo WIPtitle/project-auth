@@ -10,14 +10,16 @@ from app.routers.impl.auth_router import oauth2_scheme
 from app.routers.router_wrapper import RouterWrapper
 from app.services.auth.auth_service import AuthService
 from app.services.user.user_service import UserService
+from app.clients.devices_client import DevicesClient
 
 
 class UserRouter(RouterWrapper):
     @inject
-    def __init__(self, user_service: UserService, auth_service: AuthService):
+    def __init__(self, user_service: UserService, auth_service: AuthService, devices_client: DevicesClient):
         super().__init__(prefix="/users")
         self.user_service = user_service
         self.auth_service = auth_service
+        self.devices_client = devices_client
 
 
     def _define_routes(self):
@@ -49,7 +51,7 @@ class UserRouter(RouterWrapper):
 
 
         @self.router.put("/{user_id}")
-        def update_user(user_id: int, user: UserInputDto, token: str = Depends(oauth2_scheme)):
+        async def update_user(user_id: int, user: UserInputDto, token: str = Depends(oauth2_scheme)):
             token_user = self.auth_service.get_validated_user_from_token(token)
 
             if Permission.USER_MANAGER not in token_user.permissions:
@@ -58,6 +60,9 @@ class UserRouter(RouterWrapper):
 
                 if set(token_user.permissions) != set(user.permissions):
                     raise AuthorizationException("Can't update your permissions unless user manager")
+
+            if await self.devices_client.get_if_active_groups():
+                raise BadRequestException("Can't update user if there are active groups")
 
             if user.password is not None and user.password != "":
                 user.password = self.auth_service.get_pwd_context().hash(user.password)
