@@ -52,7 +52,6 @@ class AuthServiceImpl(AuthService):
 
 
     def get_validated_user_from_token(self, token: str) -> User:
-        print(token)
         try:
             payload = jwt.decode(token, self.secret_key, algorithms=[self.algorithm])
             user_email: str = payload.get("sub")
