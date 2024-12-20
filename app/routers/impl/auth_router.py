@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, Query
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from app.config.bindings import inject
@@ -17,7 +17,7 @@ class AuthRouter(RouterWrapper):
 
     def _define_routes(self):
         @self.router.post("/token")
-        def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), rememberme: bool = False):
+        def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), rememberme: bool = Query(...)):
             return self.auth_service.login(form_data.username, form_data.password, rememberme)
 
 
