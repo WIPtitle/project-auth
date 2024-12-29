@@ -16,7 +16,7 @@ class UserRepositoryImpl(UserRepository):
 
     def find_by_id(self, user_id: int) -> User:
         statement = select(User).where(User.id == user_id)
-        user_db = self.database_connector.get_session().exec(statement).first()
+        user_db = self.database_connector.get_new_session().exec(statement).first()
         if user_db is None:
             raise NotFoundException("User was not found")
 
@@ -25,7 +25,7 @@ class UserRepositoryImpl(UserRepository):
 
     def find_by_email(self, email: str) -> User:
         statement = select(User).where(User.email == email)
-        user_db = self.database_connector.get_session().exec(statement).first()
+        user_db = self.database_connector.get_new_session().exec(statement).first()
         if user_db is None:
             raise NotFoundException("User was not found")
 
@@ -36,9 +36,9 @@ class UserRepositoryImpl(UserRepository):
         try:
             self.find_by_email(user.email)
         except NotFoundException:
-            self.database_connector.get_session().add(user)
-            self.database_connector.get_session().commit()
-            self.database_connector.get_session().refresh(user)
+            self.database_connector.get_new_session().add(user)
+            self.database_connector.get_new_session().commit()
+            self.database_connector.get_new_session().refresh(user)
             return user
         raise BadRequestException("User already exists")
 
@@ -51,18 +51,18 @@ class UserRepositoryImpl(UserRepository):
         if user.pin is not None and user.pin != "":
             user_db.pin = user.pin
         user_db.permissions = user.permissions
-        self.database_connector.get_session().commit()
-        self.database_connector.get_session().refresh(user_db)
+        self.database_connector.get_new_session().commit()
+        self.database_connector.get_new_session().refresh(user_db)
         return user_db
 
 
     def delete_by_id(self, user_id: int) -> User:
         user_db = self.find_by_id(user_id)
-        self.database_connector.get_session().delete(user_db)
-        self.database_connector.get_session().commit()
+        self.database_connector.get_new_session().delete(user_db)
+        self.database_connector.get_new_session().commit()
         return user_db
 
 
     def find_all(self) -> Sequence[User]:
         statement = select(User)
-        return self.database_connector.get_session().exec(statement).all()
+        return self.database_connector.get_new_session().exec(statement).all()
