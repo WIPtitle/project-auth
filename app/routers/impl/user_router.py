@@ -1,5 +1,6 @@
 from fastapi import Depends
 
+from app.clients.devices_client import DevicesClient
 from app.config.bindings import inject
 from app.exceptions.authentication_exception import AuthenticationException
 from app.exceptions.authorization_exception import AuthorizationException
@@ -10,7 +11,6 @@ from app.routers.impl.auth_router import oauth2_scheme
 from app.routers.router_wrapper import RouterWrapper
 from app.services.auth.auth_service import AuthService
 from app.services.user.user_service import UserService
-from app.clients.devices_client import DevicesClient
 
 
 class UserRouter(RouterWrapper):
