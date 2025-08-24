@@ -25,8 +25,8 @@ class UserRepositoryImpl(UserRepository):
         return user_db
 
 
-    def find_by_email(self, email: str) -> User:
-        statement = select(User).where(User.email == email)
+    def find_by_username(self, username: str) -> User:
+        statement = select(User).where(User.username == username)
         session = self.database_connector.get_new_session()
         user_db = session.exec(statement).first()
         session.close()
@@ -38,7 +38,7 @@ class UserRepositoryImpl(UserRepository):
 
     def create(self, user: User) -> User:
         try:
-            self.find_by_email(user.email)
+            self.find_by_username(user.username)
         except NotFoundException:
             session = self.database_connector.get_new_session()
             session.add(user)
@@ -56,7 +56,7 @@ class UserRepositoryImpl(UserRepository):
         if user_db is None:
             raise NotFoundException("User was not found")
 
-        user_db.email = user.email
+        user_db.username = user.username
         if user.password is not None and user.password != "":
             user_db.password = user.password
         if user.pin is not None and user.pin != "":

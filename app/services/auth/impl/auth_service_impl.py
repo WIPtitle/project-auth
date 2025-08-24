@@ -38,14 +38,14 @@ class AuthServiceImpl(AuthService):
         return encoded_jwt
 
 
-    def login(self, email: str, password: str, rememberme: bool):
-        user = self.get_validated_user_from_credentials(email, password)
-        access_token = self.create_jwt_token(secret_key=self.secret_key, data={"sub": user.email}, algorithm=self.algorithm, rememberme=rememberme)
+    def login(self, username: str, password: str, rememberme: bool):
+        user = self.get_validated_user_from_credentials(username, password)
+        access_token = self.create_jwt_token(secret_key=self.secret_key, data={"sub": user.username}, algorithm=self.algorithm, rememberme=rememberme)
         return {"access_token": access_token, "token_type": "bearer"}
 
 
-    def get_validated_user_from_credentials(self, email: str, password: str) -> User:
-        user = self.user_repository.find_by_email(email)
+    def get_validated_user_from_credentials(self, username: str, password: str) -> User:
+        user = self.user_repository.find_by_username(username)
         if not user or not self.pwd_context.verify(password, user.password):
             raise AuthenticationException("Wrong password")
         return user
@@ -54,12 +54,12 @@ class AuthServiceImpl(AuthService):
     def get_validated_user_from_token(self, token: str) -> User:
         try:
             payload = jwt.decode(token, self.secret_key, algorithms=[self.algorithm])
-            user_email: str = payload.get("sub")
-            if user_email is None:
+            user_username: str = payload.get("sub")
+            if user_username is None:
                 raise AuthenticationException("Malformed token")
         except Exception as e:
             raise AuthenticationException("JWT error")
-        user = self.user_repository.find_by_email(user_email)
+        user = self.user_repository.find_by_username(user_username)
         if user is None:
             raise AuthenticationException("User relative to this token doesn't exist")
         return user

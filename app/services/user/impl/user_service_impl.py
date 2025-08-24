@@ -14,8 +14,8 @@ class UserServiceImpl(UserService):
         return self.user_repository.find_by_id(user_id)
 
 
-    def get_by_email(self, email: str) -> User:
-        return self.user_repository.find_by_email(email)
+    def get_by_username(self, username: str) -> User:
+        return self.user_repository.find_by_username(username)
 
 
     def create(self, user: User) -> User:

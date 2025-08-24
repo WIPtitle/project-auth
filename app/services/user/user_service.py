@@ -10,7 +10,7 @@ class UserService(ABC):
         pass
 
     @abstractmethod
-    def get_by_email(self, email: str) -> User:
+    def get_by_username(self, username: str) -> User:
         pass
 
     @abstractmethod
