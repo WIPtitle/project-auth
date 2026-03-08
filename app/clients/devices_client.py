@@ -1,11 +1,9 @@
-import os
-
 import httpx
 
 
 class DevicesClient:
     def __init__(self):
-        self.devices_hostname = os.getenv("DEVICES_MANAGER_HOSTNAME")
+        self.devices_hostname = "devices-manager"
 
     async def get_if_active_groups(self):
         url = f"http://{self.devices_hostname}:8000/device-group/active-groups"
