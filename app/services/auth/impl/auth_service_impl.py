@@ -1,5 +1,5 @@
 import os
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, timezone
 
 import jwt
 from passlib.context import CryptContext
@@ -32,7 +32,7 @@ class AuthServiceImpl(AuthService):
             expires_delta = timedelta(days=365)
         else:
             expires_delta = timedelta(minutes=self.expiration)
-        expire = datetime.now() + expires_delta
+        expire = datetime.now(tz=timezone.utc) + expires_delta
         to_encode.update({"exp": expire})
         encoded_jwt = jwt.encode(to_encode, secret_key, algorithm=algorithm)
         return encoded_jwt
